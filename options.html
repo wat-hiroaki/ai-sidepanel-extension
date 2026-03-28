@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Sidebar Settings</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #1a1a1a;
+      color: #e0e0e0;
+      padding: 24px;
+      min-width: 400px;
+    }
+    h1 { font-size: 18px; margin-bottom: 20px; }
+    .section { margin-bottom: 24px; }
+    .section h2 { font-size: 14px; color: #aaa; margin-bottom: 8px; }
+    .shortcut-info {
+      background: #222;
+      border: 1px solid #444;
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .shortcut-info p { margin: 0 0 8px; font-size: 13px; color: #ccc; }
+    .shortcut-info .current {
+      font-size: 16px;
+      font-weight: 600;
+      color: #6366f1;
+      margin-bottom: 12px;
+    }
+    a {
+      color: #6366f1;
+      text-decoration: none;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    a:hover { text-decoration: underline; }
+    .service-list { list-style: none; padding: 0; }
+    .service-list li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: #222;
+      border: 1px solid #333;
+      border-radius: 6px;
+      margin-bottom: 6px;
+      font-size: 13px;
+    }
+    .service-list li .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .service-list li .name { flex: 1; }
+    .service-list li .url { color: #888; font-size: 12px; }
+    .remove-btn {
+      background: none;
+      border: none;
+      color: #666;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 0 4px;
+    }
+    .remove-btn:hover { color: #ef4444; }
+    .remove-btn:focus-visible { outline: 2px solid #6366f1; outline-offset: 2px; border-radius: 4px; }
+    .add-form {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .add-form input {
+      flex: 1;
+      padding: 6px 10px;
+      border: 1px solid #444;
+      border-radius: 6px;
+      background: #1a1a1a;
+      color: #fff;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .add-form input:focus {
+      border-color: #6366f1;
+    }
+    .add-form button {
+      padding: 6px 14px;
+      background: #6366f1;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: background 0.15s;
+    }
+    .add-form button:hover {
+      background: #5558e6;
+    }
+    .add-form button:focus-visible {
+      outline: 2px solid #6366f1;
+      outline-offset: 2px;
+    }
+    .error-msg {
+      color: #ef4444;
+      font-size: 12px;
+      margin-top: 4px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>AI Sidebar Settings</h1>
+
+  <div class="section">
+    <h2>Keyboard Shortcut</h2>
+    <div class="shortcut-info">
+      <p>Current shortcut:</p>
+      <div class="current" id="current-shortcut">Alt+A</div>
+      <p>To change the shortcut:</p>
+      <a id="open-shortcuts">chrome://extensions/shortcuts</a>
+      <p style="margin-top:8px;font-size:12px;color:#888;">
+        Click to copy the URL, then paste it in your address bar.
+        Find "AI Sidebar" and set your preferred key combination.
+      </p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Default Services</h2>
+    <ul class="service-list" id="default-services"></ul>
+  </div>
+
+  <div class="section">
+    <h2>Custom Services</h2>
+    <ul class="service-list" id="custom-services"></ul>
+    <div class="add-form">
+      <input type="text" id="add-name" placeholder="Name" aria-label="Service name">
+      <input type="text" id="add-url" placeholder="https://..." aria-label="Service URL">
+      <button id="add-btn">Add</button>
+    </div>
+    <div class="error-msg" id="add-error"></div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

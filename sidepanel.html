@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Sidebar</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+  <div id="topbar" role="tablist" aria-label="AI services"></div>
+  <div id="frames"></div>
+
+  <!-- Add URL modal -->
+  <div id="modal-backdrop"></div>
+  <div id="modal" role="dialog" aria-label="Add custom service">
+    <label for="modal-name">Name</label>
+    <input type="text" id="modal-name" placeholder="e.g. Perplexity">
+    <label for="modal-url">URL</label>
+    <input type="text" id="modal-url" placeholder="https://...">
+    <div id="modal-error"></div>
+    <div class="modal-note">Some sites may block iframe embedding.</div>
+    <div id="modal-actions">
+      <button class="cancel" id="modal-cancel">Cancel</button>
+      <button class="confirm" id="modal-confirm">Add</button>
+    </div>
+  </div>
+
+  <script src="sidepanel.js"></script>
+</body>
+</html>
