@@ -8,8 +8,7 @@
     "declarativeNetRequest",
     "declarativeNetRequestFeedback",
     "sidePanel",
-    "tabs",
-    "scripting"
+    "tabs"
   ],
   "host_permissions": [
     "https://claude.ai/*",

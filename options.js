@@ -7,7 +7,7 @@ const DEFAULT_SERVICES = [
 
 // Load current shortcut
 chrome.commands.getAll((commands) => {
-  const toggle = commands.find((c) => c.name === "toggle-sidebar");
+  const toggle = commands.find((c) => c.name === "_execute_action");
   if (toggle?.shortcut) {
     document.getElementById("current-shortcut").textContent = toggle.shortcut;
   }
