@@ -1,8 +1,8 @@
-# AI Sidebar
+# AI SidePanel
 
 A Chrome extension that gives you quick access to AI chat services from Chrome's native Side Panel. Switch between Claude, Gemini, ChatGPT, and Grok with one click — or add any URL you want.
 
-![AI Sidebar - Side Panel](screenshots/side-panel.png)
+![AI SidePanel](screenshots/side-panel.png)
 
 ## Features
 
@@ -32,7 +32,7 @@ A Chrome extension that gives you quick access to AI chat services from Chrome's
 ## Customize shortcut
 
 1. Go to `chrome://extensions/shortcuts`
-2. Find **AI Sidebar** → **Toggle AI Side Panel**
+2. Find **AI SidePanel** → **Toggle AI SidePanel**
 3. Set your preferred key combination
 
 ## How it works
@@ -45,7 +45,7 @@ A Chrome extension that gives you quick access to AI chat services from Chrome's
 ## Files
 
 ```
-ai-sidebar-extension/
+ai-sidepanel-extension/
 ├── manifest.json       # Extension config, permissions, shortcuts
 ├── background.js       # Side panel behavior setup
 ├── sidepanel.html/js/css  # Panel UI: tabs, iframes, modal
