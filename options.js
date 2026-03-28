@@ -30,21 +30,57 @@ document.getElementById("open-shortcuts").addEventListener("click", (e) => {
 });
 
 // Render default services
-const defaultList = document.getElementById("default-services");
-DEFAULT_SERVICES.forEach((s) => {
-  const li = document.createElement("li");
-  const dot = document.createElement("span");
-  dot.className = "dot";
-  dot.style.background = s.color;
-  const nameSpan = document.createElement("span");
-  nameSpan.className = "name";
-  nameSpan.textContent = s.name;
-  const urlSpan = document.createElement("span");
-  urlSpan.className = "url";
-  urlSpan.textContent = s.url;
-  li.append(dot, nameSpan, urlSpan);
-  defaultList.appendChild(li);
-});
+function renderDefaultServices() {
+  chrome.storage.local.get(["hiddenServices"], (data) => {
+    const hidden = data.hiddenServices || [];
+    const defaultList = document.getElementById("default-services");
+    defaultList.innerHTML = "";
+
+    DEFAULT_SERVICES.forEach((s) => {
+      const li = document.createElement("li");
+      const isHidden = hidden.includes(s.id);
+
+      if (isHidden) li.classList.add("hidden-service");
+
+      const dot = document.createElement("span");
+      dot.className = "dot";
+      dot.style.background = isHidden ? "#555" : s.color;
+      const nameSpan = document.createElement("span");
+      nameSpan.className = "name";
+      nameSpan.textContent = s.name;
+      const urlSpan = document.createElement("span");
+      urlSpan.className = "url";
+      urlSpan.textContent = s.url;
+      li.append(dot, nameSpan, urlSpan);
+
+      if (isHidden) {
+        const restoreBtn = document.createElement("button");
+        restoreBtn.className = "restore-btn";
+        restoreBtn.textContent = "+";
+        restoreBtn.title = "Restore " + s.name;
+        restoreBtn.setAttribute("aria-label", "Restore " + s.name);
+        restoreBtn.addEventListener("click", () => {
+          const updated = hidden.filter((id) => id !== s.id);
+          chrome.storage.local.set({ hiddenServices: updated }, renderDefaultServices);
+        });
+        li.appendChild(restoreBtn);
+      } else {
+        const removeBtn = document.createElement("button");
+        removeBtn.className = "remove-btn";
+        removeBtn.textContent = "\u00d7";
+        removeBtn.setAttribute("aria-label", "Remove " + s.name);
+        removeBtn.addEventListener("click", () => {
+          hidden.push(s.id);
+          chrome.storage.local.set({ hiddenServices: hidden }, renderDefaultServices);
+        });
+        li.appendChild(removeBtn);
+      }
+
+      defaultList.appendChild(li);
+    });
+  });
+}
+renderDefaultServices();
 
 // Render custom services
 function renderCustomServices() {

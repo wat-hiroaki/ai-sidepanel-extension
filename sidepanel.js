@@ -14,9 +14,11 @@ const frames = document.getElementById("frames");
 
 // --- Load/Save ---
 function loadState(callback) {
-  chrome.storage.local.get(["customServices", "activeId", "serviceOrder"], (data) => {
+  chrome.storage.local.get(["customServices", "activeId", "serviceOrder", "hiddenServices"], (data) => {
     const custom = data.customServices || [];
-    const all = [...DEFAULT_SERVICES, ...custom];
+    const hidden = data.hiddenServices || [];
+    const visibleDefaults = DEFAULT_SERVICES.filter((s) => !hidden.includes(s.id));
+    const all = [...visibleDefaults, ...custom];
     // Restore saved order
     if (data.serviceOrder && data.serviceOrder.length > 0) {
       const ordered = [];
@@ -32,13 +34,14 @@ function loadState(callback) {
     } else {
       services = all;
     }
-    activeId = data.activeId || services[0].id;
+    activeId = services.length > 0 ? (data.activeId && services.find((s) => s.id === data.activeId) ? data.activeId : services[0].id) : null;
     callback();
   });
 }
 
 function saveCustomServices() {
-  const custom = services.filter((s) => !DEFAULT_SERVICES.find((d) => d.id === s.id));
+  const defaultIds = DEFAULT_SERVICES.map((d) => d.id);
+  const custom = services.filter((s) => !defaultIds.includes(s.id));
   chrome.storage.local.set({ customServices: custom });
   saveServiceOrder();
 }
@@ -115,15 +118,13 @@ function renderTabs() {
       renderTabs();
     });
 
-    // Right-click to remove custom services
-    if (!DEFAULT_SERVICES.find((d) => d.id === service.id)) {
-      tab.addEventListener("contextmenu", (e) => {
-        e.preventDefault();
-        if (confirm(`Remove "${service.name}"?`)) {
-          removeService(service.id);
-        }
-      });
-    }
+    // Right-click to remove any service
+    tab.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+      if (confirm(`Remove "${service.name}"?`)) {
+        removeService(service.id);
+      }
+    });
 
     topbar.appendChild(tab);
   });
@@ -156,6 +157,7 @@ function updateTabStyles() {
 
 // --- Switch service ---
 function switchTo(id) {
+  if (!id) return;
   activeId = id;
   saveActiveId();
 
@@ -183,7 +185,6 @@ function switchTo(id) {
 
       fallback.append(msg, btn);
       frames.appendChild(fallback);
-      // Use fallback div as placeholder in iframes map so show/hide works
       iframes[id] = fallback;
     } else {
       // Loading indicator
@@ -230,7 +231,21 @@ function switchTo(id) {
 
 // --- Add/Remove service ---
 function removeService(id) {
+  const isDefault = DEFAULT_SERVICES.find((d) => d.id === id);
+
   services = services.filter((s) => s.id !== id);
+
+  if (isDefault) {
+    // Hide default service by adding to hiddenServices
+    chrome.storage.local.get(["hiddenServices"], (data) => {
+      const hidden = data.hiddenServices || [];
+      if (!hidden.includes(id)) {
+        hidden.push(id);
+        chrome.storage.local.set({ hiddenServices: hidden });
+      }
+    });
+  }
+
   saveCustomServices();
 
   if (iframes[id]) {
@@ -242,11 +257,11 @@ function removeService(id) {
   if (loader) loader.remove();
 
   if (activeId === id) {
-    activeId = services[0].id;
+    activeId = services.length > 0 ? services[0].id : null;
   }
 
   renderTabs();
-  switchTo(activeId);
+  if (activeId) switchTo(activeId);
 }
 
 // --- Modal ---
@@ -306,5 +321,5 @@ document.getElementById("modal").addEventListener("keydown", (e) => {
 // --- Init ---
 loadState(() => {
   renderTabs();
-  switchTo(activeId);
+  if (activeId) switchTo(activeId);
 });

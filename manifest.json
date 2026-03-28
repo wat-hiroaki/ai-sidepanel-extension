@@ -1,27 +1,18 @@
 {
   "manifest_version": 3,
   "name": "AI SidePanel",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Quick access to AI chat services from Chrome's Side Panel",
   "permissions": [
     "storage",
     "declarativeNetRequest",
     "declarativeNetRequestFeedback",
     "sidePanel",
-    "tabs"
+    "tabs",
+    "scripting"
   ],
   "host_permissions": [
-    "https://claude.ai/*",
-    "https://*.anthropic.com/*",
-    "https://gemini.google.com/*",
-    "https://accounts.google.com/*",
-    "https://chatgpt.com/*",
-    "https://*.openai.com/*",
-    "https://login.chatgpt.com/*",
-    "https://grok.com/*",
-    "https://*.grok.com/*",
-    "https://*.x.ai/*",
-    "https://x.com/*"
+    "<all_urls>"
   ],
   "action": {
     "default_title": "Toggle AI SidePanel"
